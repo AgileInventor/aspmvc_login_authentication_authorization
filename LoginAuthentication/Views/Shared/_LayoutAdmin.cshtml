@@ -1,0 +1,67 @@
+﻿@using LoginAuthentication.Models;
+@{
+    var user = @Session["user"] as User;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/fontawesome")
+        @Scripts.Render("~/bundles/modernizr")
+        
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                </ul>
+                <div class="nav nav-pills pull-right" style="margin-top: 8px;">
+                    <div class="btn-group">
+                        <a class="btn btn-primary" href="#">
+                            <i class="fa fa-user fa-fw"></i>
+                            @if (user != null)
+                            {
+                                @user.UserName
+                            }
+                        </a>
+                        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="fa fa-caret-down"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#"><i class="i"></i> Salir</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

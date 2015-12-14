@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ModelAuth" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Resource">
+    <Key>
+      <PropertyRef Name="ResourceID" />
+    </Key>
+    <Property Name="ResourceID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ResourceName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Controller" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Action" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="RoleResource" Relationship="Self.FK_RoleResource_Resource" FromRole="Resource" ToRole="RoleResource" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="RoleID" />
+    </Key>
+    <Property Name="RoleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="RoleResource" Relationship="Self.FK_RoleResource_Role" FromRole="Role" ToRole="RoleResource" />
+    <NavigationProperty Name="User" Relationship="ModelAuth.FK_User_Role" FromRole="Role" ToRole="User" />
+  </EntityType>
+  <EntityType Name="RoleResource">
+    <Key>
+      <PropertyRef Name="RoleResourceID" />
+    </Key>
+    <Property Name="RoleResourceID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RoleID" Type="Int32" />
+    <Property Name="ResourceID" Type="Int32" />
+    <NavigationProperty Name="Resource" Relationship="Self.FK_RoleResource_Resource" FromRole="RoleResource" ToRole="Resource" />
+    <NavigationProperty Name="Role" Relationship="Self.FK_RoleResource_Role" FromRole="RoleResource" ToRole="Role" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Status" Type="Boolean" Nullable="false" />
+    <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Modify" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="RoleID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Role" Relationship="ModelAuth.FK_User_Role" FromRole="User" ToRole="Role" />
+  </EntityType>
+  <Association Name="FK_RoleResource_Resource">
+    <End Role="Resource" Type="Self.Resource" Multiplicity="0..1" />
+    <End Role="RoleResource" Type="Self.RoleResource" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Resource">
+        <PropertyRef Name="ResourceID" />
+      </Principal>
+      <Dependent Role="RoleResource">
+        <PropertyRef Name="ResourceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RoleResource_Role">
+    <End Role="Role" Type="Self.Role" Multiplicity="0..1" />
+    <End Role="RoleResource" Type="Self.RoleResource" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="RoleResource">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AgileInventorEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Resource" EntityType="Self.Resource" />
+    <EntitySet Name="Role" EntityType="Self.Role" />
+    <EntitySet Name="RoleResource" EntityType="Self.RoleResource" />
+    <EntitySet Name="User" EntityType="Self.User" />
+    <AssociationSet Name="FK_RoleResource_Resource" Association="Self.FK_RoleResource_Resource">
+      <End Role="Resource" EntitySet="Resource" />
+      <End Role="RoleResource" EntitySet="RoleResource" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RoleResource_Role" Association="Self.FK_RoleResource_Role">
+      <End Role="Role" EntitySet="Role" />
+      <End Role="RoleResource" EntitySet="RoleResource" />
+    </AssociationSet>
+    <AssociationSet Name="FK_User_Role" Association="ModelAuth.FK_User_Role">
+      <End Role="Role" EntitySet="Role" />
+      <End Role="User" EntitySet="User" />
+    </AssociationSet>
+  </EntityContainer>
+  <Association Name="FK_User_Role">
+    <End Type="ModelAuth.Role" Role="Role" Multiplicity="1" />
+    <End Type="ModelAuth.User" Role="User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
